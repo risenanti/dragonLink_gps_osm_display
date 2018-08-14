@@ -14,17 +14,28 @@ using namespace std;
 #define SERIALBAUDRATE QSerialPort::Baud115200
 
 //Latitude=32,Longitude=-18,END
-string processString(string input){
-    string result, temp;
+struct coordinates{
+    int lat; int longitude;
+};
 
-    size_t found = input.find(",");
+coordinates processLocString(string input){
+    coordinates result;
+    auto startCur = input.find("=");
+    auto endCur = input.find(",");
+    string tempStr;
+    for(auto i = startCur+1; i < endCur; ++i){
+        tempStr+=input[i];
+    }
+    result.lat = stoi(tempStr);
 
-    for (auto i = 9; i < found; ++i){
-        temp+=input[i];
-    }
-    for (auto i = temp.begin(); i < temp.end(); ++i){
-        if ()
-    }
+    startCur = input.find("=", startCur+1);
+    endCur = input.find(",", endCur+1);
+    tempStr.clear();
+    for(auto i = startCur+1; i < endCur; ++i){
+            tempStr+=input[i];
+        }
+    result.longitude = stoi(tempStr);
+
     return result;
 }
 
@@ -40,24 +51,15 @@ int main(int argc, char *argv[])
         cout <<"ERROR CANNOT OPEN SERIAL PORT" <<endl;
     }
     QByteArray input;
-
-    while(true){
-        serial.waitForReadyRead(-1);
-        input.append(serial.readLine());
-        serial.waitForReadyRead(-1);
-        input.append(serial.readLine());
-        serial.waitForReadyRead(-1);
-        input.append(serial.readLine());
-        //cout << input.toStdString()<< "-------------PROG" <<endl;
-        string inString = input.toStdString();
-        cout << processString(inString) << endl;
-        input.clear();
-
-
-        input.clear();
-        serial.flush();
-        usleep(5*1000);
-    }
+    coordinates locData;
+    QObject::connect(&serial, &QSerialPort::readyRead, [&]
+    {
+        if(serial.bytesAvailable()>25){
+            input=serial.readAll();
+            locData = processLocString(input.toStdString());
+            cout << locData.lat << " " << locData.longitude << endl;
+        }
+    });
 
     return a.exec();
 }
