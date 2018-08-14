@@ -14,11 +14,17 @@ using namespace std;
 #define SERIALBAUDRATE QSerialPort::Baud115200
 
 //Latitude=32,Longitude=-18,END
-string processString(QByteArray bytes){
-    string result,temp = bytes.toStdString();
+string processString(string input){
+    string result, temp;
 
+    size_t found = input.find(",");
 
-
+    for (auto i = 9; i < found; ++i){
+        temp+=input[i];
+    }
+    for (auto i = temp.begin(); i < temp.end(); ++i){
+        if ()
+    }
     return result;
 }
 
@@ -42,7 +48,9 @@ int main(int argc, char *argv[])
         input.append(serial.readLine());
         serial.waitForReadyRead(-1);
         input.append(serial.readLine());
-        cout << input.toStdString()<<endl;
+        //cout << input.toStdString()<< "-------------PROG" <<endl;
+        string inString = input.toStdString();
+        cout << processString(inString) << endl;
         input.clear();
 
 
