@@ -15,27 +15,46 @@ using namespace std;
 
 //Latitude=32,Longitude=-18,END
 struct coordinates{
-    int lat; int longitude;
+    float lat; float longitude;
 };
 
 coordinates processLocString(string input){
     coordinates result;
     auto startCur = input.find("=");
     auto endCur = input.find(",");
+    if(startCur < 3) return result;
     string tempStr;
     for(auto i = startCur+1; i < endCur; ++i){
         tempStr+=input[i];
     }
-    result.lat = stoi(tempStr);
+    try{
+        result.lat = stof(tempStr);
+    }
+    catch(exception a){
+        result.lat = 0;
+        result.longitude=0;
+        return result;
+    }
 
     startCur = input.find("=", startCur+1);
     endCur = input.find(",", endCur+1);
     tempStr.clear();
-    for(auto i = startCur+1; i < endCur; ++i){
-            tempStr+=input[i];
-        }
-    result.longitude = stoi(tempStr);
+    if(startCur!=string::npos){
+        if(endCur!=string::npos){
+            for(auto i = startCur+1; i < endCur; ++i){
+                    tempStr+=input[i];
+                }
 
+            try{
+                result.longitude = stof(tempStr);
+            }
+            catch(exception a){
+                result.lat = 0;
+                result.longitude=0;
+                return result;
+            }
+        }
+    }
     return result;
 }
 
@@ -54,10 +73,11 @@ int main(int argc, char *argv[])
     coordinates locData;
     QObject::connect(&serial, &QSerialPort::readyRead, [&]
     {
-        if(serial.bytesAvailable()>25){
+        if(serial.bytesAvailable()>13){
             input=serial.readAll();
             locData = processLocString(input.toStdString());
             cout << locData.lat << " " << locData.longitude << endl;
+            //cout << input.toStdString() << endl;
         }
     });
 
