@@ -5,8 +5,8 @@ import QtPositioning 5.6
 
 Window {
     visible: true
-    width: 640
-    height: 480
+    width: 1024
+    height: 768
 
     Plugin {
         id: osmMapPlugin
@@ -15,8 +15,8 @@ Window {
     Map {
         anchors.fill: parent
         plugin: osmMapPlugin
-        center: QtPositioning.coordinate(31.3271189, -89.2903392)
-        zoomLevel: 15
+        center: QtPositioning.coordinate(31.32, -89.29)
+        zoomLevel: 13
         MapCircle {
             center: circleController.center
             radius: circleController.radius

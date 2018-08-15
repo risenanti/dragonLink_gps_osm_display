@@ -85,15 +85,15 @@ int main(int argc, char *argv[])
         });
 
     CircleController circleController;
-        circleController.setCenter(QGeoCoordinate(31.32, -89.29));
-        circleController.setRadius(40);
+        circleController.setCenter(QGeoCoordinate(31.328178, -89.3353));
+        circleController.setRadius(100);
     QTimer timer;
 
     QObject::connect(&timer, &QTimer::timeout, [&circleController](){
-            circleController.translate(31.32, -89.29);//(double)locData.lat, (double)locData.longitude);
-            //cout << locData.lat <<" " << locData.longitude << endl;
+        circleController.setCenter(QGeoCoordinate(locData.lat, locData.longitude));
+            cout << locData.lat <<" " << locData.longitude << endl;
         });
-    timer.start(1000);
+    timer.start(800);
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("circleController", &circleController);
@@ -102,3 +102,4 @@ int main(int argc, char *argv[])
 
     return app.exec();
 }
+
