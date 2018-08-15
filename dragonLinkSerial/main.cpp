@@ -73,11 +73,12 @@ int main(int argc, char *argv[])
     coordinates locData;
     QObject::connect(&serial, &QSerialPort::readyRead, [&]
     {
-        if(serial.bytesAvailable()>13){
-            input=serial.readAll();
+        if(serial.bytesAvailable()>28){
+            input=serial.readLine();
             locData = processLocString(input.toStdString());
             cout << locData.lat << " " << locData.longitude << endl;
             //cout << input.toStdString() << endl;
+            serial.flush();
         }
     });
 

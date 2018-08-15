@@ -22,6 +22,11 @@ struct coordinates{
 
 coordinates processLocString(string input){
     coordinates result;
+    if(input.size()<8){
+        result.lat = 0;
+        result.longitude=0;
+        return result;
+    }
     auto startCur = input.find("=");
     auto endCur = input.find(",");
     if(startCur < 3) return result;
@@ -78,9 +83,16 @@ int main(int argc, char *argv[])
 
     QObject::connect(&serial, &QSerialPort::readyRead, [&]
         {
-            if(serial.bytesAvailable()>25){
-                input=serial.readAll();
-                locData = processLocString(input.toStdString());
+            if(serial.bytesAvailable()>28){
+                input=serial.readLine();
+                cout <<input.toStdString()<<endl;
+                coordinates tempData = processLocString(input.toStdString());
+                if(tempData.lat>0 && tempData.lat < 300 && tempData.longitude>-100 && tempData.longitude < 50 && tempData.longitude!=0){
+                    locData.lat = tempData.lat;
+                    locData.longitude = tempData.longitude;
+                }
+                cout << locData.lat <<" " << locData.longitude << endl;
+                serial.flush();
             }
         });
 
@@ -91,7 +103,8 @@ int main(int argc, char *argv[])
 
     QObject::connect(&timer, &QTimer::timeout, [&circleController](){
         circleController.setCenter(QGeoCoordinate(locData.lat, locData.longitude));
-            cout << locData.lat <<" " << locData.longitude << endl;
+            //cout << locData.lat <<" " << locData.longitude << endl;
+
         });
     timer.start(800);
 
