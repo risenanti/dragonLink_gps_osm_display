@@ -72,11 +72,11 @@ int main(int argc, char *argv[])
 		if(gps.decodeSingleMessage(Ublox::NAV_POSLLH, pos_data) == 1){
             
             led->setColor(Colors::Yellow);
-            QString gpsDatString = "Latitude=";
-            gpsDatString += QString::number(pos_data[2]);
-            gpsDatString +=",Longitude=";
-            gpsDatString += QString::number(pos_data[1]);
-            gpsDatString += "\r\n";
+            QString gpsDatString = "Lat=";
+            gpsDatString += QString::number(pos_data[2]/10000000);
+            gpsDatString +=",Lon=";
+            gpsDatString += QString::number(pos_data[1]/10000000);
+            gpsDatString += ",END\r\n";
             
             output=gpsDatString.toUtf8();
             
